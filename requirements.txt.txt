@@ -1,4 +1,0 @@
-gTTS
-google-cloud-vision
-opencv-python
-pillow
