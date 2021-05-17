@@ -36,7 +36,7 @@ def detect_face(file, max_results=4):
     return client.face_detection(
         image=image, max_results=max_results).face_annotations
 
-def highlight_faces(image, faces):
+def highlight_faces(image, faces): #person detection function
     im = Image.open(image)
     draw = ImageDraw.Draw(im)
     # Specify the font-family and the font-size
@@ -150,7 +150,7 @@ def object_analysis():
         sleep()
 
 #########
-#button activations
+#button activations #event trigger for object scan button
 def ObjectScan(channel):
     print("Button was pushed!")
     object_analysis()
@@ -162,7 +162,9 @@ def ObjectScan(channel):
             detection = gTTS(text=output_text,lang=language,slow=False)
         if distance_right > 2 and distance_right < 7:
             output_text = "Warning, there is an object",str(distance_right),"feet on your right"
-def TextScan(channel):
+
+
+def TextScan(channel): #event trigger for text scan button press
     cap = cv2.VideoCapture(0)
     print("Text Scann Button was pushed!")
     ret, frame = cap.read()
@@ -170,7 +172,7 @@ def TextScan(channel):
     cv2.imwrite(file,frame)
     detect_text(file)
     
-def ToggleMode(channel):
+def ToggleMode(channel): #event trigger for mode change button
     print(" Mode ButtonButton was pushed!")
     global ModeChange
     if ModeChange == 1:
@@ -179,7 +181,7 @@ def ToggleMode(channel):
         ModeChange = 1
     gpio.setmode(gpio.BOARD)
 
-def sleep():
+def sleep(): #constantly scans for button presses
     while True:
         time.sleep(1)
         #gpio.setup(37, gpio.IN, pull_up_down=gpio.PUD_DOWN) # Set pin 10 to be an input pin and set initial value to be pulled low (off)
@@ -191,7 +193,6 @@ def sleep():
 
         #gpio.setup(15, gpio.IN, pull_up_down=gpio.PUD_DOWN) # Set pin 10 to be an input pin and set initial value to be pulled low (off)
         gpio.add_event_detect(15,gpio.RISING,callback=TextScan, bouncetime = 25) # Setup event on pin 10 rising edge
-    #fuck with lin
 
     #button detection
 gpio.setup(37, gpio.IN, pull_up_down=gpio.PUD_DOWN) # Set pin 10 to be an input pin and set initial value to be pulled low (off)
@@ -203,12 +204,11 @@ gpio.add_event_detect(13,gpio.RISING,callback=ToggleMode, bouncetime = 1)
 
 gpio.setup(15, gpio.IN, pull_up_down=gpio.PUD_DOWN) # Set pin 10 to be an input pin and set initial value to be pulled low (off)
 gpio.add_event_detect(15,gpio.RISING,callback=TextScan, bouncetime = 25) # Setup event on pin 10 rising edge
-    #fuck with line below idk if useful
 
     
 
 
-while True:
+while True: #distance calculations to determine how far an object is. Determines if its coming from left or right side
     if ModeChange == 0:
         print (TRIG_1,ECHO_1)
         print(TRIG_2, ECHO_2)
